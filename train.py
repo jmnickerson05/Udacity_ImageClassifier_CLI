@@ -9,17 +9,18 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('data_directory')
     parser.add_argument('--save_dir', default='.')
-    parser.add_argument('--learning_rate', default='0.01')
+    parser.add_argument('--learning_rate', default=0.01)
     parser.add_argument('--epochs', default=25)
     parser.add_argument('--gpu', default=True)
     # NOPE -- Not sure I would just change models on the fly in the real world.
     # parser.add_argument('--arch', default='vgg16')
     # IS THIS NEEDED?
     # parser.add_argument('--hidden_units', default=512)
-    args = parser.parse_args()
     global args
+    args = parser.parse_args()
 
-    train_and_save(initialize_model(), num_epochs=args.epochs)
+    model = initialize_model(num_classes=102, feature_extract=True)[0]
+    train_and_save(model)
 
 
 # Adapted From: https://pytorch.org/tutorials/beginner/finetuning_torchvision_models_tutorial.html
@@ -51,7 +52,8 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
     best_acc = 0.0
 
     device = torch.device("cuda:0" if (torch.cuda.is_available() and args.gpu is True) else "cpu")
-
+    print(device)
+    model.to(device)
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
