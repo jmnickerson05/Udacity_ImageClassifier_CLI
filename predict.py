@@ -20,7 +20,7 @@ def main():
     if not args.show_plots:
         predict(image_path=args.image_path, model=model, topk=args.top_k)
     else:
-        predict_and_plot(model, 'flowers/test/19/image_06175.jpg')
+        predict_and_plot(model, args.image_path)
 
 
 def load_model():
